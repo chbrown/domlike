@@ -1,0 +1,24 @@
+{
+  "name": "domlike",
+  "version": "0.0.1",
+  "description": "A better DomHandler for fb55's htmlparser2",
+  "keywords": ["dom", "html", "parser", "mdn"],
+  "homepage": "https://github.com/chbrown/domlike",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/chbrown/domlike.git"
+  },
+  "bugs": {
+    "email": "Christopher Brown <io@henrian.com>",
+    "url": "http://github.com/chbrown/domlike/issues"
+  },
+  "license": "MIT",
+  "author": "Christopher Brown <io@henrian.com> (http://henrian.com)",
+  "dependencies": {
+    "loge": "*"
+  },
+  "devDependencies": {
+    "htmlparser2": "*",
+    "request": "*"
+  }
+}
