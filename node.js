@@ -94,7 +94,7 @@ Node.prototype.firstDFS = function(predicate) {
   if (this.nodeType == nodeTypes.ELEMENT_NODE ||
       this.nodeType == nodeTypes.DOCUMENT_NODE) {
     for (var i = 0, childNode; (childNode = this.childNodes[i]); i++) {
-      var result = childNode.depthFirstSearch(predicate);
+      var result = childNode.firstDFS(predicate);
       if (result) return result;
     }
   }
