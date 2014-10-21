@@ -1,8 +1,13 @@
 {
   "name": "domlike",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A better DomHandler for fb55's htmlparser2",
-  "keywords": ["dom", "html", "parser", "mdn"],
+  "keywords": [
+    "dom",
+    "html",
+    "parser",
+    "mdn"
+  ],
   "homepage": "https://github.com/chbrown/domlike",
   "repository": {
     "type": "git",
