@@ -23,9 +23,9 @@ var Handler = module.exports = function(callback) {
   this.callback = callback;
 
   // initialize with a single special document node on the stack
-  var document = new Node(nodeTypes.DOCUMENT_NODE);
-  document.childNodes = [];
-  this._stack = [document];
+  this.document = new Node(nodeTypes.DOCUMENT_NODE);
+  this.document.childNodes = [];
+  this._stack = [this.document];
 };
 
 Handler.prototype.top = function() {
@@ -68,6 +68,7 @@ Handler.prototype.onopentag = function(name, attribs) {
   element.tagName = name;
   element.attributes = attribs;
   element.childNodes = [];
+  element.ownerDocument = this.document;
 
   this._stack.push(element);
 };

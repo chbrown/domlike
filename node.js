@@ -1,4 +1,5 @@
 /*jslint node: true */
+var url = require('url');
 var logger = require('loge');
 var nodeTypes = require('./types');
 
@@ -69,9 +70,9 @@ Node.prototype.getElementsByTagName = function(tagName) {
   });
 };
 Node.prototype.querySelector = function(selector) {
+  throw new Error('Not yet implemented');
   return this.firstDFS(function(node) {
     // maybe use https://github.com/mdevils/node-css-selector-parser ?
-    throw new Error('Not yet implemented');
   });
 };
 
@@ -85,7 +86,7 @@ Node.prototype.firstDFS = function(predicate) {
     1. try on the current node
     2. recurse on the current node's children
 
-    return as soon as anything looks good. return null if nothing does.
+    return as soon as anything looks good. return undefined if nothing does.
   */
   if (predicate(this)) {
     return this;
@@ -277,7 +278,24 @@ Object.defineProperty(Node.prototype, 'nodeName', {
 
 // node.nodeValue is a POJO
 
-Object.defineProperty(Node.prototype, 'ownerDocument', {get: notYetImplemented});
+// node.ownerDocument is a Node
+
+Object.defineProperty(Node.prototype, 'href', {
+  // .href should really only be defined on Element, and only tagName: 'a' elements, at that.
+  get: function() {
+    /** node.href returns this node's [href] attribute as a URL resolved
+    against the owner document's URL iff node is an anchor element.
+
+    Otherwise returns null.
+    */
+    if (this.nodeType == nodeTypes.ELEMENT_NODE && this.tagName.toLowerCase() == 'a') {
+      var base_url = this.ownerDocument.URL || '';
+      var href_attr = this.attributes.href;
+      return url.resolve(base_url, href_attr);
+    }
+  }
+});
+
 
 Object.defineProperty(Node.prototype, 'parentElement', {
   get: function() {
