@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<searchqualificationtypesresponse>
+  <operationrequest>
+    <requestid>bf9e04e6-87f1-4906-b1e6-1cbda427f623</requestid>
+  </operationrequest>
+  <searchqualificationtypesresult>
+    <request><isvalid>True</isvalid></request>
+    <numresults>10</numresults>
+    <totalnumresults>36846</totalnumresults>
+    <qualificationtype>
+      <qualificationtypeid>2IFEZZ2MIKMNTRQD6UU83WWXI4O7OS</qualificationtypeid>
+      <creationtime>2014-01-25T02:42:59Z</creationtime>
+      <name>日本語話せる</name>
+      <description>日本語話せるワーカーのカテゴリです</description>
+      <qualificationtypestatus>Active</qualificationtypestatus>
+    </qualificationtype>
+    <qualificationtype>
+      <qualificationtypeid>2U80OHOVR14IFHMKO9THPCWA6X865B</qualificationtypeid>
+      <creationtime>2013-10-16T02:36:48Z</creationtime>
+      <name>中文测试</name>
+      <description>用于确认印地学生身份</description>
+      <qualificationtypestatus>Active</qualificationtypestatus>
+    </qualificationtype>
+    <qualificationtype>
+      <qualificationtypeid>2WH33FDEY5COHDX62CU8HRFLCA3S1X</qualificationtypeid>
+      <creationtime>2013-10-18T13:52:54Z</creationtime>
+      <name>中文手机用户</name>
+      <description>需要有Android智能手机，并且能阅读中文，下载和使用中文手机软件。</description>
+      <qualificationtypestatus>Active</qualificationtypestatus>
+    </qualificationtype>
+    <qualificationtype>
+      <qualificationtypeid>2H00G5R98D8J5W9I7RJTYYCG3MQTD7</qualificationtypeid>
+      <creationtime>2013-12-18T17:32:01Z</creationtime>
+      <name>中文</name>
+      <description>Basic Chinese language qualification</description>
+      <qualificationtypestatus>Active</qualificationtypestatus>
+    </qualificationtype>
+    <qualificationtype>
+      <qualificationtypeid>3VDU6IFZ78S4JZ2XLF1VUVAA3RZ5UI</qualificationtypeid>
+      <creationtime>2014-05-30T13:20:25Z</creationtime>
+      <name>☑ HIT Slayer</name>
+      <description>
+        Before Buffy Summers, there was Spring. In every season, there is work for an accomplished Slayer.
+      </description>
+      <qualificationtypestatus>Active</qualificationtypestatus>
+    </qualificationtype>
+    <qualificationtype>
+      <qualificationtypeid>3KVW4MB3P3DK25YPCH560V95K8VXJS</qualificationtypeid>
+      <creationtime>2014-07-08T14:23:19Z</creationtime>
+      <name>
+        “Identify the number of people within the Image – tutorial”- Mark
+      </name>
+      <description>
+        Review the image, then identify the number of people within the image.
+      </description>
+      <qualificationtypestatus>Active</qualificationtypestatus>
+    </qualificationtype>
+    <qualificationtype>
+      <qualificationtypeid>2QHUQIHPCGJ2OFW3LJWXP0JPPZT71F</qualificationtypeid>
+      <creationtime>2013-01-23T06:39:09Z</creationtime>
+      <name>русского языка носитель языка</name>
+      <description>
+        Рабочие - русского языка носитель языка.
+      </description>
+      <qualificationtypestatus>Active</qualificationtypestatus>
+    </qualificationtype>
+    <qualificationtype>
+      <qualificationtypeid>25J0ONNVRH1KHNDPZE27DNV9LMDNWZ</qualificationtypeid>
+      <creationtime>2013-05-08T09:30:36Z</creationtime>
+      <name>еуые</name>
+      <description>еуые</description>
+      <keywords></keywords>
+      <qualificationtypestatus>Active</qualificationtypestatus>
+    </qualificationtype>
+    <qualificationtype>
+      <qualificationtypeid>3DDNYIPUQN8QVH7Z4143G8IIAEIZRD</qualificationtypeid>
+      <creationtime>2014-12-05T15:59:23Z</creationtime>
+      <name>ФССП: Извлечение общей информации</name>
+      <description>
+        ФССП, квалификация, извлечение иощей информации
+      </description>
+      <keywords></keywords>
+      <qualificationtypestatus>Active</qualificationtypestatus>
+    </qualificationtype>
+    <qualificationtype>
+      <qualificationtypeid>3LSWMYIHIOZ5VKLYOYA0APQB912SSQ</qualificationtypeid>
+      <creationtime>2014-12-08T13:50:31Z</creationtime>
+      <name>ФССП: Извлечение информации по СПИ</name>
+      <description>спи, фссп, информация</description>
+      <keywords></keywords>
+      <qualificationtypestatus>Active</qualificationtypestatus>
+    </qualificationtype>
+  </searchqualificationtypesresult>
+</searchqualificationtypesresponse>

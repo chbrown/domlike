@@ -8,7 +8,7 @@ This repository, `domlike`, replaces both [`DomHandler`](https://github.com/fb55
 
 Install:
 
-    npm install domlike
+    npm install --save domlike htmlparser2
 
 Use:
 
@@ -17,14 +17,14 @@ Use:
     var domlike = require('domlike');
 
     request.get('http://henrian.com', function(err, res, body) {
-      if (err) throw callback(err);
+      if (err) throw err;
 
-      var handler = new DomlikeHandler(function(err, document) {
-        if (err) throw callback(err);
+      var handler = new domlike.Handler(function(err, document) {
+        if (err) throw err;
 
         // collect all anchors (<a> elements) and print out their text and url
         // in Markdown syntax
-        document.allDFS(function(node) {
+        document.queryPredicateAll(function(node) {
           return node.tagName == 'a';
         }).forEach(function(node) {
           console.log('[%s](%s)', node.textContent, node.attributes.href);
@@ -39,7 +39,6 @@ Use:
     });
 
 
-
 ## License
 
-Copyright © 2014 Christopher Brown. [MIT Licensed](LICENSE).
+Copyright 2014-2015 Christopher Brown. [MIT Licensed](http://opensource.org/licenses/MIT).

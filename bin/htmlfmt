@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+var fs = require('fs');
+var logger = require('loge');
+
+var domlike = require('../');
+
+var yargs = require('yargs')
+  .usage('Usage: htmlfmt page.html')
+  .example('curl https://www.google.com/ | htmlfmt')
+  .options({
+    help: {
+      describe: 'print this help message',
+      alias: 'h',
+      type: 'boolean',
+    },
+    // json: 'print JSON output',
+    verbose: {
+      describe: 'print debugging information',
+      alias: 'v',
+      type: 'boolean',
+    },
+    version: {
+      describe: 'print version',
+      type: 'boolean',
+    },
+    limit: {
+      describe: 'maximum element length to inline',
+      default: 60,
+    },
+  });
+
+var argv = yargs.argv;
+logger.level = argv.verbose ? 'debug' : 'info';
+
+if (argv.help) {
+  yargs.showHelp();
+}
+else if (argv.version) {
+  console.log(require('../package').version);
+}
+else {
+  // process.stdin.isTTY is set to `true` when nothing is piped into htmlfmt
+  logger.debug('STDIN=%s', process.stdin.isTTY ? 'TTY' : 'pipe');
+  argv = yargs.check(function(argv) {
+    if (process.stdin.isTTY && argv._.length < 1) {
+      throw new Error('You must either pipe in HTML content or specify a filename as a positional argument.');
+    }
+    return true;
+  }).argv;
+  // use STDIN if available (if not TTY), otherwise use the first positional  command line argument
+  var readableStream = (!process.stdin.isTTY ? process.stdin : fs.createReadStream(argv._[0]));
+  readableStream.pipe(new domlike.Parser()).on('finish', function() {
+    logger.debug('document=%j', this.document);
+    var formattedHTML = domlike.serializeNode(this.document, '  ', argv.limit).join('\n');
+    process.stdout.write(formattedHTML);
+    process.stdout.write('\n');
+  });
+}
