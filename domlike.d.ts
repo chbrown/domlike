@@ -1,4 +1,5 @@
-/// <reference path="../../type_declarations/index.d.ts" />
+/// <reference path="../../type_declarations/DefinitelyTyped/node/node.d.ts" />
+/// <reference path="../../type_declarations/DefinitelyTyped/htmlparser2/htmlparser2.d.ts" />
 import * as stream from 'stream';
 import * as htmlparser2 from 'htmlparser2';
 import * as events from 'events';
@@ -120,9 +121,13 @@ declare module "domlike" {
         textContent: any;
         children: Node[];
         /**
-        All Node subclasses in use should override this method
+        toString() returns a string of XML/HTML, using XMLSerializer.default (which
+        sets indent='  ' and inlineLimit=40).
         */
         toString(): string;
+        /**
+        toJSON() returns an impoverished but still DOM-like structure
+        */
         toJSON(): {
             nodeType: string;
             nodeValue: any;
@@ -132,7 +137,6 @@ declare module "domlike" {
         URL: string;
         childNodes: any[];
         constructor(URL: string, childNodes?: any[]);
-        toString(): string;
         toJSON(): {
             nodeType: string;
             nodeValue: any;
@@ -151,7 +155,6 @@ declare module "domlike" {
         }, ownerDocument?: any, childNodes?: any[]);
         openTag(): string;
         closeTag(): string;
-        toString(): string;
         toJSON(): {
             nodeType: string;
             nodeValue: any;
@@ -222,15 +225,23 @@ declare module "domlike" {
         */
         onprocessinginstruction(name: string, data: string): void;
     }
-    /**
-    Return an Array of strings for a given Node.
-    
-    */
-    function serializeNode(node: Node | Document | Element, indentation?: string, inlineLimit?: number): string[];
+    class XMLSerializer {
+        indentation: string;
+        inlineLimit: number;
+        constructor(indentation: string, inlineLimit: number);
+        static default: XMLSerializer;
+        /**
+        Return an Array of strings for a given Node.
+        */
+        private _serializeToLines(node);
+        serializeToString(node: Node): string;
+    }
+    interface ParserOptions extends stream.WritableOptions, htmlparser2.Options {
+    }
     class Parser extends stream.Writable {
         handler: Handler;
         parser: htmlparser2.Parser;
-        constructor(opts?: stream.WritableOptions);
+        constructor(opts?: ParserOptions);
         document: Document;
         _write(chunk: Buffer | string, encoding: string, callback: (error?: Error) => void): void;
     }

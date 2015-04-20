@@ -16,7 +16,7 @@ describe('domlike formatter', function () {
             // parse original
             fs.createReadStream(original_filepath, { encoding: 'utf8' })
                 .pipe(new domlike.Parser()).on('finish', function () {
-                var output = domlike.serializeNode(this.document, '  ', 40).join('\n').trim();
+                var output = this.document.toString();
                 assert.equal(output, expected_output, "parse result does not match expected output.\n          when parsed => " + output + "\n          but should  == " + expected_output);
                 callback();
             });

@@ -51,7 +51,8 @@ else {
   var readableStream = (!process.stdin.isTTY ? process.stdin : fs.createReadStream(argv._[0]));
   readableStream.pipe(new domlike.Parser()).on('finish', function() {
     logger.debug('document=%j', this.document);
-    var formattedHTML = domlike.serializeNode(this.document, '  ', argv.limit).join('\n');
+    var xmlSerializer = new domlike.XMLSerializer('  ', argv.limit);
+    var formattedHTML = xmlSerializer.serializeToString(this.document);
     process.stdout.write(formattedHTML);
     process.stdout.write('\n');
   });

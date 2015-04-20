@@ -4,7 +4,8 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-/// <reference path="type_declarations/index.d.ts" />
+/// <reference path="type_declarations/DefinitelyTyped/node/node.d.ts" />
+/// <reference path="type_declarations/DefinitelyTyped/htmlparser2/htmlparser2.d.ts" />
 var url_1 = require('url');
 var stream = require('stream');
 var htmlparser2 = require('htmlparser2');
@@ -336,14 +337,15 @@ var Node = (function () {
         configurable: true
     });
     /**
-    All Node subclasses in use should override this method
+    toString() returns a string of XML/HTML, using XMLSerializer.default (which
+    sets indent='  ' and inlineLimit=40).
     */
     Node.prototype.toString = function () {
-        // If the DOM Tree has been constructed properly, the following node types should never show up:
-        //   ATTRIBUTE_NODE, ENTITY_REFERENCE_NODE, ENTITY_NODE,
-        //   DOCUMENT_TYPE_NODE, DOCUMENT_FRAGMENT_NODE, NOTATION_NODE,
-        throw new Error("Cannot stringify node \"" + this + "\" with type " + NodeType[this.nodeType]);
+        return XMLSerializer.default.serializeToString(this);
     };
+    /**
+    toJSON() returns an impoverished but still DOM-like structure
+    */
     Node.prototype.toJSON = function () {
         return {
             nodeType: NodeType[this.nodeType],
@@ -361,9 +363,6 @@ var Document = (function (_super) {
         this.URL = URL;
         this.childNodes = childNodes;
     }
-    Document.prototype.toString = function () {
-        return this.childNodes.map(function (child) { return child.toString(); }).join('');
-    };
     Document.prototype.toJSON = function () {
         return {
             nodeType: NodeType[this.nodeType],
@@ -396,9 +395,6 @@ var Element = (function (_super) {
     };
     Element.prototype.closeTag = function () {
         return "</" + this.tagName + ">";
-    };
-    Element.prototype.toString = function () {
-        return this.openTag() + this.childNodes.map(function (child) { return child.toString(); }).join('') + this.closeTag();
     };
     Element.prototype.toJSON = function () {
         return {
@@ -581,43 +577,47 @@ var Handler = (function (_super) {
     return Handler;
 })(events.EventEmitter);
 exports.Handler = Handler;
-/**
-Return an Array of strings for a given Node.
-
-*/
-function serializeNode(node, indentation, inlineLimit) {
-    if (indentation === void 0) { indentation = '  '; }
-    if (inlineLimit === void 0) { inlineLimit = 40; }
-    if (node instanceof Document) {
-        return flatMap(node.childNodes, function (node) { return serializeNode(node, indentation, inlineLimit); }).filter(function (str) { return str.length > 0; });
+var XMLSerializer = (function () {
+    function XMLSerializer(indentation, inlineLimit) {
+        this.indentation = indentation;
+        this.inlineLimit = inlineLimit;
     }
-    else if (node instanceof Element) {
-        var childNodeStrings = flatMap(node.childNodes, function (node) { return serializeNode(node, indentation, inlineLimit); }).filter(function (str) { return str.length > 0; });
-        // if the child is multiple lines already, or one line that's longer than `inlineLimit`, we indent over multiple lines
-        var inline = (childNodeStrings.length <= 1) && (sum(childNodeStrings, function (str) { return str.length; }) < inlineLimit);
-        if (inline) {
-            // return the element on one line
-            return [node.openTag() + childNodeStrings.join('') + node.closeTag()];
+    /**
+    Return an Array of strings for a given Node.
+    */
+    XMLSerializer.prototype._serializeToLines = function (node) {
+        var _this = this;
+        if (node instanceof Document) {
+            return flatMap(node.childNodes, function (node) { return _this._serializeToLines(node); }).filter(function (str) { return str.length > 0; });
         }
-        else {
-            // childNodeStrings.length > 1
-            // return the element on multiple lines
-            var indentedChildNodeStrings = childNodeStrings.map(function (str) { return indentation + str; });
-            indentedChildNodeStrings.unshift(node.openTag());
-            indentedChildNodeStrings.push(node.closeTag());
-            return indentedChildNodeStrings;
+        else if (node instanceof Element) {
+            var childLines = flatMap(node.childNodes, function (node) { return _this._serializeToLines(node); }).filter(function (str) { return str.length > 0; });
+            // if the child is multiple lines already, or one line that's longer than `inlineLimit`, we indent over multiple lines
+            var inline = (childLines.length <= 1) && (sum(childLines, function (str) { return str.length; }) < this.inlineLimit);
+            // arrange the children
+            childLines = inline ? [childLines.join('')] : childLines.map(function (line) { return _this.indentation + line; });
+            childLines.unshift(node.openTag());
+            childLines.push(node.closeTag());
+            // join them if inline
+            return inline ? [childLines.join('')] : childLines;
         }
-    }
-    // all the other node types handle toString() just fine
-    return [node.toString().trim()];
-}
-exports.serializeNode = serializeNode;
+        // all the other node types handle toString() just fine
+        return [node.toString().trim()];
+    };
+    XMLSerializer.prototype.serializeToString = function (node) {
+        return this._serializeToLines(node).join('\n');
+    };
+    XMLSerializer.default = new XMLSerializer('  ', 40);
+    return XMLSerializer;
+})();
+exports.XMLSerializer = XMLSerializer;
 var Parser = (function (_super) {
     __extends(Parser, _super);
     function Parser(opts) {
+        if (opts === void 0) { opts = { decodeEntities: true }; }
         _super.call(this, opts);
         this.handler = new Handler();
-        this.parser = new htmlparser2.Parser(this.handler, { decodeEntities: true });
+        this.parser = new htmlparser2.Parser(this.handler, opts);
     }
     Object.defineProperty(Parser.prototype, "document", {
         get: function () {

@@ -1,4 +1,5 @@
-/// <reference path="type_declarations/index.d.ts" />
+/// <reference path="type_declarations/DefinitelyTyped/node/node.d.ts" />
+/// <reference path="type_declarations/DefinitelyTyped/htmlparser2/htmlparser2.d.ts" />
 import {resolve} from 'url';
 import * as stream from 'stream';
 import * as htmlparser2 from 'htmlparser2';
@@ -307,15 +308,15 @@ export class Node {
   }
 
   /**
-  All Node subclasses in use should override this method
+  toString() returns a string of XML/HTML, using XMLSerializer.default (which
+  sets indent='  ' and inlineLimit=40).
   */
-  toString(): string {
-    // If the DOM Tree has been constructed properly, the following node types should never show up:
-    //   ATTRIBUTE_NODE, ENTITY_REFERENCE_NODE, ENTITY_NODE,
-    //   DOCUMENT_TYPE_NODE, DOCUMENT_FRAGMENT_NODE, NOTATION_NODE,
-    throw new Error(`Cannot stringify node "${this}" with type ${NodeType[this.nodeType]}`);
+  toString() {
+    return XMLSerializer.default.serializeToString(this);
   }
-
+  /**
+  toJSON() returns an impoverished but still DOM-like structure
+  */
   toJSON() {
     return {
       nodeType: NodeType[this.nodeType],
@@ -326,9 +327,6 @@ export class Node {
 export class Document extends Node {
   constructor(public URL: string, public childNodes = []) { super(NodeType.DOCUMENT_NODE, null) }
 
-  toString() {
-    return this.childNodes.map(child => child.toString()).join('');
-  }
   toJSON() {
     return {
       nodeType: NodeType[this.nodeType],
@@ -354,10 +352,6 @@ export class Element extends Node {
   }
   closeTag() {
     return `</${this.tagName}>`;
-  }
-
-  toString() {
-    return this.openTag() + this.childNodes.map(child => child.toString()).join('') + this.closeTag();
   }
 
   toJSON() {
@@ -519,40 +513,45 @@ export class Handler extends events.EventEmitter implements htmlparser2.Handler 
   }
 }
 
-/**
-Return an Array of strings for a given Node.
+export class XMLSerializer {
+  constructor(public indentation: string, public inlineLimit: number) { }
+  static default = new XMLSerializer('  ', 40);
 
-*/
-export function serializeNode(node: Node | Document | Element, indentation: string = '  ', inlineLimit = 40): string[] {
-  if (node instanceof Document) {
-    return flatMap(node.childNodes, node => serializeNode(node, indentation, inlineLimit)).filter(str => str.length > 0);
-  }
-  else if (node instanceof Element) {
-    let childNodeStrings = flatMap(node.childNodes, node => serializeNode(node, indentation, inlineLimit)).filter(str => str.length > 0);
-    // if the child is multiple lines already, or one line that's longer than `inlineLimit`, we indent over multiple lines
-    var inline = (childNodeStrings.length <= 1) && (sum(childNodeStrings, str => str.length) < inlineLimit);
-    if (inline) {
-      // return the element on one line
-      return [node.openTag() + childNodeStrings.join('') + node.closeTag()];
+  /**
+  Return an Array of strings for a given Node.
+  */
+  private _serializeToLines(node: Node | Document | Element): string[] {
+    if (node instanceof Document) {
+      return flatMap(node.childNodes, node => this._serializeToLines(node)).filter(str => str.length > 0);
     }
-    else {
-      // childNodeStrings.length > 1
-      // return the element on multiple lines
-      var indentedChildNodeStrings = childNodeStrings.map(str => indentation + str);
-      indentedChildNodeStrings.unshift(node.openTag());
-      indentedChildNodeStrings.push(node.closeTag());
-      return indentedChildNodeStrings;
+    else if (node instanceof Element) {
+      let childLines = flatMap(node.childNodes, node => this._serializeToLines(node)).filter(str => str.length > 0);
+      // if the child is multiple lines already, or one line that's longer than `inlineLimit`, we indent over multiple lines
+      var inline = (childLines.length <= 1) && (sum(childLines, str => str.length) < this.inlineLimit);
+      // arrange the children
+      childLines = inline ? [childLines.join('')] : childLines.map(line => this.indentation + line);
+      childLines.unshift(node.openTag());
+      childLines.push(node.closeTag());
+      // join them if inline
+      return inline ? [childLines.join('')] : childLines;
     }
+    // all the other node types handle toString() just fine
+    return [node.toString().trim()];
   }
-  // all the other node types handle toString() just fine
-  return [node.toString().trim()];
+
+  serializeToString(node: Node): string {
+    return this._serializeToLines(node).join('\n');
+  }
 }
+
+export interface ParserOptions extends stream.WritableOptions, htmlparser2.Options { }
 
 export class Parser extends stream.Writable {
   handler = new Handler();
-  parser = new htmlparser2.Parser(this.handler, {decodeEntities: true});
-  constructor(opts?: stream.WritableOptions) {
+  parser: htmlparser2.Parser;
+  constructor(opts: ParserOptions = {decodeEntities: true}) {
     super(opts);
+    this.parser = new htmlparser2.Parser(this.handler, opts);
   }
 
   get document(): Document {
