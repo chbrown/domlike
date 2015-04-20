@@ -8,12 +8,20 @@ var yargs = require('yargs')
   .usage('Usage: htmlfmt page.html')
   .example('curl https://www.google.com/ | htmlfmt')
   .options({
+    limit: {
+      describe: 'maximum element length to inline',
+      default: 60,
+    },
+    lower: {
+      describe: 'convert tag names to lowercase',
+      type: 'boolean',
+    },
+    // script meta commands
     help: {
       describe: 'print this help message',
       alias: 'h',
       type: 'boolean',
     },
-    // json: 'print JSON output',
     verbose: {
       describe: 'print debugging information',
       alias: 'v',
@@ -22,10 +30,6 @@ var yargs = require('yargs')
     version: {
       describe: 'print version',
       type: 'boolean',
-    },
-    limit: {
-      describe: 'maximum element length to inline',
-      default: 60,
     },
   });
 
@@ -49,7 +53,7 @@ else {
   }).argv;
   // use STDIN if available (if not TTY), otherwise use the first positional  command line argument
   var readableStream = (!process.stdin.isTTY ? process.stdin : fs.createReadStream(argv._[0]));
-  readableStream.pipe(new domlike.Parser()).on('finish', function() {
+  readableStream.pipe(new domlike.Parser({lowerCaseTags: argv.lower === true})).on('finish', function() {
     logger.debug('document=%j', this.document);
     var xmlSerializer = new domlike.XMLSerializer('  ', argv.limit);
     var formattedHTML = xmlSerializer.serializeToString(this.document);
