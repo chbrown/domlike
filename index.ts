@@ -552,6 +552,9 @@ export class Parser extends stream.Writable {
   constructor(opts: ParserOptions = {decodeEntities: true}) {
     super(opts);
     this.parser = new htmlparser2.Parser(this.handler, opts);
+    this.on('finish', () => {
+      this.emit('document', this.document);
+    })
   }
 
   get document(): Document {

@@ -614,10 +614,14 @@ exports.XMLSerializer = XMLSerializer;
 var Parser = (function (_super) {
     __extends(Parser, _super);
     function Parser(opts) {
+        var _this = this;
         if (opts === void 0) { opts = { decodeEntities: true }; }
         _super.call(this, opts);
         this.handler = new Handler();
         this.parser = new htmlparser2.Parser(this.handler, opts);
+        this.on('finish', function () {
+            _this.emit('document', _this.document);
+        });
     }
     Object.defineProperty(Parser.prototype, "document", {
         get: function () {
