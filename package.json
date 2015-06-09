@@ -24,5 +24,8 @@
     "mocha": "*",
     "request": "*",
     "typescript": "*"
+  },
+  "scripts": {
+    "test": "make test"
   }
 }
