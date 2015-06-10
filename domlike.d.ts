@@ -1,9 +1,9 @@
 /// <reference path="../../type_declarations/DefinitelyTyped/node/node.d.ts" />
 /// <reference path="../../type_declarations/DefinitelyTyped/htmlparser2/htmlparser2.d.ts" />
-import * as stream from 'stream';
-import * as htmlparser2 from 'htmlparser2';
-import * as events from 'events';
 declare module "domlike" {
+    import * as stream from 'stream';
+    import * as htmlparser2 from 'htmlparser2';
+    import * as events from 'events';
     enum NodeType {
         ELEMENT_NODE = 1,
         ATTRIBUTE_NODE = 2,
