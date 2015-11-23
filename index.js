@@ -1,16 +1,12 @@
-var __extends = this.__extends || function (d, b) {
+var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-/// <reference path="type_declarations/DefinitelyTyped/node/node.d.ts" />
-/// <reference path="type_declarations/DefinitelyTyped/htmlparser2/htmlparser2.d.ts" />
 var url_1 = require('url');
-var stream = require('stream');
+var stream_1 = require('stream');
+var events_1 = require('events');
 var htmlparser2 = require('htmlparser2');
-var events = require('events');
-//// export module domlike {
 (function (NodeType) {
     NodeType[NodeType["ELEMENT_NODE"] = 1] = "ELEMENT_NODE";
     NodeType[NodeType["ATTRIBUTE_NODE"] = 2] = "ATTRIBUTE_NODE";
@@ -575,7 +571,7 @@ var Handler = (function (_super) {
         this._stackTop.childNodes.push(processing_instruction);
     };
     return Handler;
-})(events.EventEmitter);
+})(events_1.EventEmitter);
 exports.Handler = Handler;
 var XMLSerializer = (function () {
     function XMLSerializer(indentation, inlineLimit) {
@@ -635,6 +631,5 @@ var Parser = (function (_super) {
         callback();
     };
     return Parser;
-})(stream.Writable);
+})(stream_1.Writable);
 exports.Parser = Parser;
-//// }

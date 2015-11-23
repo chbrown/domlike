@@ -12,20 +12,22 @@
   "homepage": "https://github.com/chbrown/domlike",
   "repository": "git://github.com/chbrown/domlike.git",
   "author": "Christopher Brown <io@henrian.com> (http://henrian.com)",
-  "bin": {
-    "htmlfmt": "bin/htmlfmt"
-  },
   "dependencies": {
     "htmlparser2": "*",
     "loge": "*",
     "yargs": "*"
   },
   "devDependencies": {
+    "babel-core": "^5.0.0",
+    "declarations": "*",
     "mocha": "*",
     "request": "*",
-    "typescript": "*"
+    "typescript": "next"
   },
   "scripts": {
     "test": "make test"
+  },
+  "bin": {
+    "htmlfmt": "bin/htmlfmt"
   }
 }

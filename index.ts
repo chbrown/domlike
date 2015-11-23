@@ -1,11 +1,7 @@
-/// <reference path="type_declarations/DefinitelyTyped/node/node.d.ts" />
-/// <reference path="type_declarations/DefinitelyTyped/htmlparser2/htmlparser2.d.ts" />
 import {resolve} from 'url';
-import * as stream from 'stream';
+import {WritableOptions, Writable} from 'stream';
+import {EventEmitter} from 'events';
 import * as htmlparser2 from 'htmlparser2';
-import * as events from 'events';
-
-//// export module domlike {
 
 export enum NodeType {
   ELEMENT_NODE = 1,
@@ -417,7 +413,7 @@ All callbacks return void.
     onreset()
     onend()
 */
-export class Handler extends events.EventEmitter implements htmlparser2.Handler {
+export class Handler extends EventEmitter implements htmlparser2.Handler {
   private _stack: Node[];
   document: Document;
 
@@ -544,9 +540,9 @@ export class XMLSerializer {
   }
 }
 
-export interface ParserOptions extends stream.WritableOptions, htmlparser2.Options { }
+export interface ParserOptions extends WritableOptions, htmlparser2.Options { }
 
-export class Parser extends stream.Writable {
+export class Parser extends Writable {
   handler = new Handler();
   parser: htmlparser2.Parser;
   constructor(opts: ParserOptions = {decodeEntities: true}) {
@@ -566,5 +562,3 @@ export class Parser extends stream.Writable {
     callback();
   }
 }
-
-//// }

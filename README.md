@@ -44,4 +44,4 @@ TODO: Compare `htmlfmt` output with [xmlformat](http://www.kitebird.com/software
 
 ## License
 
-Copyright 2014-2015 Christopher Brown. [MIT Licensed](http://opensource.org/licenses/MIT).
+Copyright 2014-2015 Christopher Brown. [MIT Licensed](http://chbrown.github.io/licenses/MIT/#2014-2015).
