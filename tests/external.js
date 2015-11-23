@@ -1,13 +1,11 @@
-/// <reference path="../type_declarations/index.d.ts" />
-import assert = require('assert');
-import htmlparser2 = require('htmlparser2');
-import request = require('request');
-
-import domlike = require('../index');
+import assert from 'assert';
+import {describe, it} from 'mocha';
+import {get} from 'request';
+import {Parser} from '../';
 
 describe('external test', () => {
   it('should get links from personal webpage', (callback) => {
-    request.get('http://henrian.com').pipe(new domlike.Parser()).on('finish', function() {
+    get('http://henrian.com').pipe(new Parser()).on('finish', function() {
       var gplus_anchors = this.document.queryPredicateAll(node => {
         return node.tagName == 'a' && node.attributes.href == 'https://plus.google.com/+ChristopherBrownPlus';
       });
