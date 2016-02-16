@@ -22,7 +22,7 @@
     "declarations": "*",
     "mocha": "*",
     "request": "*",
-    "typescript": "next"
+    "typescript": "*"
   },
   "scripts": {
     "test": "make test"
