@@ -1,5 +1,7 @@
 # domlike
 
+[![npm version](https://badge.fury.io/js/domlike.svg)](https://www.npmjs.com/package/domlike)
+
 For use with [htmlparser2](https://github.com/fb55/htmlparser2), which is great as a parser, but kind of got off the tracks with its `DomHandler` implementation, which was fractured into two repositories, [fb55/domhandler](https://github.com/fb55/domhandler) and [fb55/DomUtils](https://github.com/fb55/DomUtils), and uses arbitrary names in its implementation.
 
 This repository, `domlike`, replaces both [`DomHandler`](https://github.com/fb55/domhandler) and [`DomUtils`](https://github.com/fb55/DomUtils) (as well as the strange and premature [`domelementtype`](https://github.com/fb55/domelementtype)), and seeks to implement most of the DOM2/DOM3 standard for [Node](https://developer.mozilla.org/en-US/docs/Web/API/Node).
