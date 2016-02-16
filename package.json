@@ -15,7 +15,7 @@
   "dependencies": {
     "htmlparser2": "*",
     "loge": "*",
-    "yargs": "*"
+    "optimist": "*"
   },
   "devDependencies": {
     "babel-core": "^5.0.0",

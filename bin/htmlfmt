@@ -4,7 +4,7 @@ var logger = require('loge');
 
 var domlike = require('../');
 
-var yargs = require('yargs')
+var argvparser = require('optimist')
   .usage('Usage: htmlfmt page.html')
   .example('curl https://www.google.com/ | htmlfmt')
   .options({
@@ -33,11 +33,11 @@ var yargs = require('yargs')
     },
   });
 
-var argv = yargs.argv;
+var argv = argvparser.argv;
 logger.level = argv.verbose ? 'debug' : 'info';
 
 if (argv.help) {
-  yargs.showHelp();
+  argvparser.showHelp();
 }
 else if (argv.version) {
   console.log(require('../package').version);
@@ -45,7 +45,7 @@ else if (argv.version) {
 else {
   // process.stdin.isTTY is set to `true` when nothing is piped into htmlfmt
   logger.debug('STDIN=%s', process.stdin.isTTY ? 'TTY' : 'pipe');
-  argv = yargs.check(function(argv) {
+  argv = argvparser.check(function(argv) {
     if (process.stdin.isTTY && argv._.length < 1) {
       throw new Error('You must either pipe in HTML content or specify a filename as a positional argument.');
     }
