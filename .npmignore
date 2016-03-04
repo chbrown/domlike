@@ -1,0 +1,6 @@
+bin/htmlfmt.ts
+index.ts
+.travis.yml
+Makefile
+tsconfig.json
+tests/
