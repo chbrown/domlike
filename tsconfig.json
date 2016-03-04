@@ -7,6 +7,7 @@
     "node_modules/declarations/htmlparser2/htmlparser2.d.ts",
     "node_modules/declarations/node/node.d.ts",
     "node_modules/declarations/optimist/optimist.d.ts",
+    "bin/htmlfmt.ts",
     "index.ts"
   ]
 }

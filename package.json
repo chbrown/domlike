@@ -28,6 +28,6 @@
     "test": "make test"
   },
   "bin": {
-    "htmlfmt": "bin/htmlfmt"
+    "htmlfmt": "bin/htmlfmt.js"
   }
 }
